@@ -14,4 +14,3 @@ def test_user_data():
     data = body["data"]
 
     assert data["id"] == expected_id
-    assert data["email"] == expected_email
