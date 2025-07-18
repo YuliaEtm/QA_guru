@@ -4,7 +4,7 @@ app = FastAPI()
 
 
 # @app.get("/api/users/10")
-# def get_user():
+# def get_get_single_user():
 #     return {
 #         "data": {
 #             "id": 10,
@@ -18,8 +18,9 @@ app = FastAPI()
 #             "text": "Tired of writing endless social media content? Let Content Caddy generate it for you."
 #         }
 #     }
+
 @app.get("/api/unknown")
-def get_user():
+def get_users_returns_unique():
     return {"page": 1, "per_page": 6, "total": 12, "total_pages": 2,
             "data": [{"id": 1, "name": "cerulean", "year": 2000, "color": "#98B2D1", "pantone_value": "15-4020"},
                      {"id": 2, "name": "fuchsia rose", "year": 2001, "color": "#C74375", "pantone_value": "17-2031"},
@@ -36,4 +37,4 @@ if __name__ == "__main__":
 
     uvicorn.run(app, host="127.0.0.1", port=8000)
 
-    # uvicorn main:app --reload
+    # uvicorn main:app --reload (запуск терминал)
