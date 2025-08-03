@@ -29,7 +29,7 @@ def get_users_returns_unique():
                      {"id": 5, "name": "tigerlily", "year": 2004, "color": "#E2583E", "pantone_value": "17-1456"},
                      {"id": 6, "name": "blue turquoise", "year": 2005, "color": "#53B0AE", "pantone_value": "15-5217"}],
             "support": {"url": "https://contentcaddy.io?utm_source=reqres&utm_medium=json&utm_campaign=referral",
-                        "text": "Tired of writing endless social media content? Let Content Caddy generate it for you."}}
+                        "text": "Tired of writing endless social media content?Let Content Caddy generate it for you."}}
 
 
 if __name__ == "__main__":
