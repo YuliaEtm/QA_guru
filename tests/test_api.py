@@ -1,5 +1,4 @@
 from http import HTTPStatus
-
 import pytest
 import requests
 from models.User import User
@@ -16,8 +15,8 @@ def test_users(app_url):
     response = requests.get(f"{app_url}/api/users/")
     assert response.status_code == HTTPStatus.OK
 
-    users = response.json()
-    for user in users:
+    users1 = response.json()
+    for user in users1:
         User.model_validate(user)
 
 
@@ -41,7 +40,7 @@ def test_user_nonexistent_values(app_url, user_id):
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-@pytest.mark.parametrize("user_id", [-1, 0, "fafaf"])
+@pytest.mark.parametrize("user_id", [-1, 0, "word"])
 def test_user_invalid_values(app_url, user_id):
     response = requests.get(f"{app_url}/api/users/{user_id}")
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY

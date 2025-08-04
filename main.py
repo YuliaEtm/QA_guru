@@ -1,9 +1,11 @@
 import json
 from http import HTTPStatus
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Query
 from models.AppStatus import AppStatus
 from models.User import User
+from fastapi_pagination import Page, Params, paginate
+
 
 app = FastAPI()
 
@@ -24,9 +26,15 @@ def get_user(user_id: int) -> User:
     return users[user_id - 1]
 
 
-@app.get("/api/users/", status_code=HTTPStatus.OK)
-def get_users() -> list[User]:
-    return users
+# @app.get("/api/users/", status_code=HTTPStatus.OK)
+# def get_users() -> list[User]:
+#     return users
+
+@app.get("/api/users", status_code=HTTPStatus.OK, response_model=Page[User])
+def get_users(params: Params = Depends()):
+    return paginate(users, params)
+
+# http://localhost:8000/api/users?page=2&size=5
 
 
 if __name__ == "__main__":
@@ -38,7 +46,7 @@ if __name__ == "__main__":
 
     print("Users loaded")
 
-    uvicorn.run(app, host="localhost", port=8002)
+    uvicorn.run(app, host="localhost", port=8000)
 
 
 
