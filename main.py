@@ -26,7 +26,7 @@ def get_user(user_id: int) -> User:
     return users[user_id - 1]
 
 
-# @app.get("/api/users/", status_code=HTTPStatus.OK)
+# @app.get("/api/users?page=2&size=5", status_code=HTTPStatus.OK)
 # def get_users() -> list[User]:
 #     return users
 
