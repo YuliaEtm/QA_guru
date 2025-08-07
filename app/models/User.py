@@ -1,5 +1,5 @@
 
-from pydantic import BaseModel, EmailStr, HttpUrl
+from pydantic import  EmailStr, HttpUrl
 from sqlmodel import Field, SQLModel
 
 
@@ -11,15 +11,15 @@ class User(SQLModel, table=True):
     avatar: str
 
 
-class UserCreate(BaseModel):
-    email: EmailStr
-    first_name: str
-    last_name: str
-    avatar: HttpUrl
-
-
-class UserUpdate(BaseModel):
-    email: EmailStr | None = None
-    first_name: str | None = None
-    last_name: str | None = None
-    avatar: HttpUrl | None = None
+# class UserCreate(BaseModel):
+#     email: EmailStr
+#     first_name: str
+#     last_name: str
+#     avatar: HttpUrl
+#
+#
+# class UserUpdate(BaseModel):
+#     email: EmailStr | None = None
+#     first_name: str | None = None
+#     last_name: str | None = None
+#     avatar: HttpUrl | None = None
