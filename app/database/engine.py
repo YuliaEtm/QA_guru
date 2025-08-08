@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from sqlmodel import create_engine, SQLModel, text
 
 
-engine = create_engine('postgresql://postgres:example@localhost:5432/postgres')
+engine = create_engine(os.getenv("postgresql://postgres:example@localhost:5432/postgres"))
+
 
 
 def create_db_and_tables():

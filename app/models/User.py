@@ -1,5 +1,5 @@
 
-from pydantic import  EmailStr, HttpUrl
+from pydantic import EmailStr, HttpUrl
 from sqlmodel import Field, SQLModel
 
 
