@@ -1,14 +1,10 @@
 from http import HTTPStatus
 from typing import Iterable
 
-#from typing import Iterable
-
 from fastapi import APIRouter, HTTPException
 
 from app.database import users
 from app.models.User import User
-
-from app.database.users import User
 
 router = APIRouter(prefix="/api/users")
 
@@ -24,10 +20,10 @@ def get_user(user_id: int) -> User:
     return user
 
 
-
 @router.get("/", status_code=HTTPStatus.OK)
 def get_users() -> Iterable[User]:
     return users.get_users()
+
 
 
 # @router.post("/", status_code=HTTPStatus.CREATED)
