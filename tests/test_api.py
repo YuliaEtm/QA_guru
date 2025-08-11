@@ -16,7 +16,7 @@ def fill_test_data(app_url):
         api_users.append(response.json())
 
     user_ids = [user["id"] for user in api_users]
-
+    print(user_ids)
     yield user_ids
 
     for user_id in user_ids:
