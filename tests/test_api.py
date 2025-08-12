@@ -19,8 +19,8 @@ def fill_test_data(app_url):
     print(user_ids)
     yield user_ids
 
-    for user_id in user_ids:
-        requests.delete(f"{app_url}/api/users/{user_id}")
+    # for user_id in user_ids:
+    #     requests.delete(f"{app_url}/api/users/{user_id}")
 
 
 @pytest.fixture
@@ -64,3 +64,30 @@ def test_user_nonexistent_values(app_url, user_id):
 def test_user_invalid_values(app_url, user_id):
     response = requests.get(f"{app_url}/api/users/{user_id}")
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+
+def test_new_user(app_url, fill_test_data):
+    payload = {
+        "email": "dog.cat@reqres.in",
+        "first_name": "Киса",
+        "last_name": "Сабакевич",
+        "avatar": "https://reqres.in/img/faces/15-image.jpg"
+        }
+    response = requests.post(f"{app_url}/api/users", json=payload)
+    print(response.text)
+    assert response.status_code == HTTPStatus.CREATED
+
+
+def test_new_user_fild(app_url, fill_test_data):
+    payload = {
+        "email": "dog.cat@reqres.in",
+        "first_name": "Киса",
+        "last_name": "Сабакевич",
+        "avatar": "https://reqres.in/img/faces/15-image.jpg"
+        }
+    response = requests.post(f"{app_url}/api/users", json=payload)
+    assert response.status_code == HTTPStatus.CREATED
+    user_id = 175
+    response = requests.get(f"{app_url}/api/users/{user_id}")
+    print(response.json())
+ # {'id': 175, 'email': 'emma.wong@reqres.in', 'last_name': 'Wong', 'first_name': 'Emma', 'avatar': 'https://reqres.in/img/faces/3-image.jpg
