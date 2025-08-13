@@ -19,8 +19,8 @@ def fill_test_data(app_url):
     print(user_ids)
     yield user_ids
 
-    # for user_id in user_ids:
-    #     requests.delete(f"{app_url}/api/users/{user_id}")
+    for user_id in user_ids:
+        requests.delete(f"{app_url}/api/users/{user_id}")
 
 
 @pytest.fixture
@@ -80,14 +80,80 @@ def test_new_user(app_url, fill_test_data):
 
 def test_new_user_fild(app_url, fill_test_data):
     payload = {
-        "email": "dog.cat@reqres.in",
-        "first_name": "Киса",
-        "last_name": "Сабакевич",
-        "avatar": "https://reqres.in/img/faces/15-image.jpg"
+        "email": "cat.dog@reqres.in",
+        "first_name": "Собак",
+        "last_name": "Кисович",
+        "avatar": "https://reqres.in/img/faces/26-image.jpg"
         }
     response = requests.post(f"{app_url}/api/users", json=payload)
     assert response.status_code == HTTPStatus.CREATED
-    user_id = 175
+
+    user_id = response.json()['id']
+    new_user = requests.get(f"{app_url}/api/users/{user_id}").json()
+
+    # {'id': 224, 'email': 'cat.dog@reqres.in', 'last_name': 'Кисович', 'first_name': 'Собак',
+    # 'avatar': 'https://reqres.in/img/faces/26-image.jpg'}
+    assert new_user['email'] == payload['email']
+    assert new_user['last_name'] == payload['last_name']
+    assert new_user['first_name'] == payload['first_name']
+    assert new_user['avatar'] == payload['avatar']
+
+
+def test_delete_user(app_url, fill_test_data):
+
+    payload = {
+        "email": "red.cat@reqres.in",
+        "first_name": "Рыжий",
+        "last_name": "Лис",
+        "avatar": "https://reqres.in/img/faces/55-image.jpg"
+        }
+    response = requests.post(f"{app_url}/api/users", json=payload)
+
+    user_id = response.json()['id']
+    # print(user_id)
+    deleted_user = requests.delete(f"{app_url}/api/users/{user_id}")
+    assert deleted_user.status_code == HTTPStatus.OK
+
+
+def test_delete_user404(app_url, fill_test_data):
+
+    payload = {
+        "email": "black.cat@reqres.in",
+        "first_name": "Black",
+        "last_name": "Cat",
+        "avatar": "https://reqres.in/img/faces/27-image.jpg"
+        }
+    response = requests.post(f"{app_url}/api/users", json=payload)
+
+    user_id = response.json()['id']
+    # print(user_id)
+    deleted_user = requests.delete(f"{app_url}/api/users/{user_id}")
+    assert deleted_user.status_code == HTTPStatus.OK
+
     response = requests.get(f"{app_url}/api/users/{user_id}")
-    print(response.json())
- # {'id': 175, 'email': 'emma.wong@reqres.in', 'last_name': 'Wong', 'first_name': 'Emma', 'avatar': 'https://reqres.in/img/faces/3-image.jpg
+    # print(response.text)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_patch_user(app_url, fill_test_data):
+
+    payload = {
+        "email": "white.dog@reqres.in",
+        "first_name": "White",
+        "last_name": "Dog",
+        "avatar": "https://reqres.in/img/faces/29-image.jpg"
+        }
+    response = requests.post(f"{app_url}/api/users", json=payload)
+
+    user_id = response.json()['id']
+    # print(user_id)
+    data = {"last_name": "Cat"}
+
+    response = requests.patch(f"{app_url}/api/users/{user_id}", json=data)
+    print(response.text)
+    #assert response.status_code == HTTPStatus.OK
+
+
+
+
+
