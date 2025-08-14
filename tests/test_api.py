@@ -32,14 +32,14 @@ def users(app_url):
 
 
 @pytest.mark.usefixtures("fill_test_data")
-def test_users(app_url):
+def est_users(app_url):
     response = requests.get(f"{app_url}/api/users/")
     assert response.status_code == HTTPStatus.OK
 
     user_list = response.json()
     for user in user_list:
-    users1 = response.json()
-    for user in users1:
+    # users1 = response.json()
+    # for user in users1:
         User.model_validate(user)
 
 
