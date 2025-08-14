@@ -1,7 +1,7 @@
 from http import HTTPStatus
 import pytest
 import requests
-from models.User import User
+from app.models.User import User
 
 
 def test_status_ok(app_url):
@@ -11,5 +11,4 @@ def test_status_ok(app_url):
 
 def test_status_true(app_url):
     response = requests.get(f"{app_url}/status").json()
-    assert response['users'] is True, 'данные не загружены'
-
+    assert response['database'] is True, 'данные не загружены'
