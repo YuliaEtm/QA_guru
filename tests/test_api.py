@@ -21,7 +21,6 @@ def fill_test_data(app_url):
 
     for user_id in user_ids:
         requests.delete(f"{app_url}/api/users/{user_id}")
-from models.User import User
 
 
 @pytest.fixture
@@ -32,14 +31,12 @@ def users(app_url):
 
 
 @pytest.mark.usefixtures("fill_test_data")
-def est_users(app_url):
+def test_users(app_url):
     response = requests.get(f"{app_url}/api/users/")
     assert response.status_code == HTTPStatus.OK
 
     user_list = response.json()
     for user in user_list:
-    # users1 = response.json()
-    # for user in users1:
         User.model_validate(user)
 
 
@@ -55,20 +52,12 @@ def test_user(app_url, fill_test_data):
         assert response.status_code == HTTPStatus.OK
         user = response.json()
         User.model_validate(user)
-@pytest.mark.parametrize("user_id", [1, 6, 12])
-def test_user(app_url, user_id):
-    response = requests.get(f"{app_url}/api/users/{user_id}")
-    assert response.status_code == HTTPStatus.OK
-
-    user = response.json()
-    User.model_validate(user)
 
 
 @pytest.mark.parametrize("user_id", [13])
 def test_user_nonexistent_values(app_url, user_id):
     response = requests.get(f"{app_url}/api/users/{user_id}")
     assert response.status_code == HTTPStatus.NOT_FOUND
-
 
 
 @pytest.mark.parametrize("user_id", [-1, 0, "word"])
@@ -116,6 +105,7 @@ def test_new_user_fild(app_url, fill_test_data):
 
     deleted_user = requests.delete(f"{app_url}/api/users/{user_id}")
     assert deleted_user.status_code == HTTPStatus.OK
+
 
 def test_delete_user(app_url, fill_test_data):
     # Создаем и удаляем нового пользователя
@@ -178,9 +168,3 @@ def test_patch_user(app_url, fill_test_data):
 
     deleted_user = requests.delete(f"{app_url}/api/users/{user_id}")
     assert deleted_user.status_code == HTTPStatus.OK
-
-
-# def test_aaa(app_url):
-#     users_ids = (118/119)
-#     for user_id in range(900, 1000):
-#         deleted_user = requests.delete(f"{app_url}/api/users/{user_id}")
