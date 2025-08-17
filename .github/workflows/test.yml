@@ -12,7 +12,7 @@ jobs:
     env:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-      APP_URL: http://127:0:0:1:8000
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,7 +24,8 @@ jobs:
       - run: docker compose up -d
       - run: sleep 5
       - run: pytest tests --junit-xml=test-results.xml
-
+        env:
+          APP_URL: http://127.0.0.1:8000
 
       - run: docker compose logs app
         if: always()
