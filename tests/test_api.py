@@ -67,7 +67,8 @@ def test_user_invalid_values(app_url, user_id):
 
 
 def test_new_user(app_url, fill_test_data):
-    # Создаем нового пользователя
+    # Создаем нового пользователя 111
+
     payload = {
         "email": "dog.cat@reqres.in",
         "first_name": "Киса",
