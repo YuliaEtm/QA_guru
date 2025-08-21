@@ -5,17 +5,17 @@ from http import HTTPStatus
 import pytest
 import requests
 
-from app.base.base import Base
+
 from app.models.User import User
 
 
 @pytest.fixture(scope="module")
-def fill_test_data(app_url):
+def fill_test_data(user_client):
     with open("users.json") as f:
         test_data_users = json.load(f)
     api_users = []
     for user in test_data_users:
-        response = requests.post(f"{app_url}/api/users/", json=user)
+        response = user_client.post(f"/api/users/", json=user)
         api_users.append(response.json())
 
     user_ids = [user["id"] for user in api_users]
@@ -23,62 +23,57 @@ def fill_test_data(app_url):
     yield user_ids
 
     for user_id in user_ids:
-        requests.delete(f"{app_url}/api/users/{user_id}")
+        user_client.delete(f"/api/users/{user_id}")
 
 
 @pytest.fixture
-def users(base_url):
-    response = requests.get(f"{base_url}/api/users/")
+def test_users(user_client):
+    response = user_client.get()
     assert response.status_code == HTTPStatus.OK
     return response.json()
 
 
-@pytest.fixture
-def base(base_url):
-    base = Base(base_url)
-    return base
 
 
-@pytest.fixture()
-def app_url():
-    return os.getenv("APP_URL")
 
 
-@pytest.mark.usefixtures("app_url")
-def test_users(app_url):
-    response = Base.get_list_users()
+
+
+
+
+@pytest.mark.usefixtures("fill_test_data")
+def test_users(user_client):
+    response = user_client.get()
     # валидация списка по элементам
-    user_list = response.json()
+    user_list = response.json()["items"]
     for user in user_list:
         User.model_validate(user)
 
 
-
-
 # @pytest.mark.usefixtures("fill_test_data")
 # def test_users_no_duplicates(users):
-#     users_ids = [user["id"] for user in users]
+#     users_ids = [user["id"] for user in users["items"]]
 #     assert len(users_ids) == len(set(users_ids))
 #
 #
-# def test_user(app_url, fill_test_data):
+# def test_user(user_client, fill_test_data):
 #     for user_id in (fill_test_data[0], fill_test_data[-1]):
-#         response = requests.get(f"{app_url}/api/users/{user_id}")
+#         response = user_client.get(f"/api/users/{user_id}")
 #         assert response.status_code == HTTPStatus.OK
 #         user = response.json()
 #         User.model_validate(user)
 #
 #
 # @pytest.mark.parametrize("user_id", [13])
-# def test_user_nonexistent_values(app_url, user_id):
-#     response = requests.get(f"{app_url}/api/users/{user_id}")
+# def test_user_nonexistent_values(user_client, user_id):
+#     response = user_client.get(f"/api/users/{user_id}")
 #     assert response.status_code == HTTPStatus.NOT_FOUND
 #
 #
 # @pytest.mark.parametrize("user_id", [-1, 0, "word"])
-# def test_user_invalid_values(app_url, user_id):
-#     response = requests.get(f"{app_url}/api/users/{user_id}")
-#     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+# def test_user_invalid_values(user_client, user_id):
+#     response = user_client.get(f"/api/users/{user_id}")
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 #
 #
 # def test_new_user(app_url, fill_test_data):
